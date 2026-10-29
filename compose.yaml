@@ -3,3 +3,11 @@ services:
     build: .
     ports:
       - "8083:80"
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
