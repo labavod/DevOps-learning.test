@@ -14,3 +14,10 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t my-devops-site:ci .
+
+      - name: Check website content
+        run: |
+          docker run --rm --entrypoint grep my-devops-site:ci \
+            -q "My website runs with Docker Compose!" \
+            /usr/share/nginx/html/index.html
+          echo "Website content OK!"
