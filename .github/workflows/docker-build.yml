@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,3 +27,13 @@ jobs:
             -q "My website runs with Docker Compose!" \
             /usr/share/nginx/html/index.html
           echo "Website content OK!"
+
+      - name: Login to GitHub Container Registry
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Publish Docker image
+        if: github.event_name == 'push'
+        run: |
+          docker tag my-devops-site:ci ghcr.io/labavod/devops-learning-site:latest
+          docker push ghcr.io/labavod/devops-learning-site:latest
