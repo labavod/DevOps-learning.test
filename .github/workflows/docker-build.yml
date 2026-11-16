@@ -35,5 +35,11 @@ jobs:
       - name: Publish Docker image
         if: github.event_name == 'push'
         run: |
-          docker tag my-devops-site:ci ghcr.io/labavod/devops-learning-site:latest
-          docker push ghcr.io/labavod/devops-learning-site:latest
+          IMAGE=ghcr.io/labavod/devops-learning-site
+          VERSION=sha-${GITHUB_SHA::7}
+
+          docker tag my-devops-site:ci "$IMAGE:latest"
+          docker tag my-devops-site:ci "$IMAGE:$VERSION"
+
+          docker push "$IMAGE:latest"
+          docker push "$IMAGE:$VERSION"
